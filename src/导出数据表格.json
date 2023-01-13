@@ -4,7 +4,7 @@
             "read_me": "在此处选择动画系列即可导出剧集数据表格，方便对内容进行批量修改。修改后的表格需要使用[[www:帮助:灰机Wiki数据更新器|灰机Wiki数据更新器]]上传，才能更新羊羊百科的数据。",
             "btn_out": "导出数据表格",
             "btn_in": "导出",
-            "a_update_log": "更新记录",
+            "a_github": "Github",
             "placeholder": "请选择",
             "blank": "请选择需要导出的内容。",
             "unknown": "未知错误",
@@ -14,7 +14,7 @@
             "read_me": "Here you can select a series and export its data as xlsx file, so you edit it on your computer. You need [[www:帮助:灰机Wiki数据更新器|Huiji-Updater]] to upload the edited xlsx file to XYY wiki.",
             "btn_out": "Export Xlsx File",
             "btn_in": "Export",
-            "a_update_log": "What's New",
+            "a_github": "Github",
             "placeholder": "Please select",
             "blank": "Please select the series to be exported.",
             "unknown": "Unknown Error",
@@ -24,7 +24,7 @@
             "read_me": "Hier können Sie eine Serie auswählen und ihre Daten als xlsx-Datei exportieren, so dass Sie sie auf Ihrem Computer bearbeiten. Sie benötigen [[www:帮助:灰机Wiki数据更新器|Huiji-Updater]], um die bearbeitete xlsx-Datei in das XYY-Wiki hochzuladen.",
             "btn_out": "Xlsx-Datei Exportieren",
             "btn_in": "Exportieren",
-            "a_update_log": "Aktualisierungsprotokoll",
+            "a_github": "Github",
             "placeholder": "Bitte auswählen",
             "blank": "Bitte wählen Sie die zu exportierende Serie aus.",
             "unknown": "Unbekannter Fehler",
@@ -194,15 +194,5 @@
                 }
             ]
         }
-    ],
-    "update_log": [
-        "计划更新：增加语言切换选择框。",
-        "2023-01-11：现在获取数据表格时会添加时间戳，避免获取到缓存的旧数据。现在表格中可以正确显示数组等特殊格式。表格文件额外导出一次作为备份。",
-        "2023-01-10：现在支持在[[Data:导出数据表格.json]]页面写入wikitext。修复了影响全局样式的问题。在页面其他内容加载完成后再运行。",
-        "2023-01-09：现在支持多种语言显示。新增在选择框内进行搜索的功能。现在通过[[Data:导出数据表格.json]]页面加载信息时，禁止打开界面，防止数据未加载完成时打开界面导致报错。",
-        "2023-01-08：优化选择器和按钮位置。修复自动聚焦模态框右上角叉叉的问题。现在通过[[Data:导出数据表格.json]]页面加载信息，所有用户都可以编辑。",
-        "2023-01-07：改为暗色模式，适配羊羊百科的主题颜色。添加更新记录。",
-        "2023-01-06：添加加载动画和强制间隔时间。",
-        "2023-01-05：实现基本功能。"
     ]
 }
