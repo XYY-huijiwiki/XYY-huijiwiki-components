@@ -78,8 +78,8 @@
                             XLSX.utils.sheet_add_aoa(worksheet, [[""]], { origin: "A1" });
                             let workbook = XLSX.utils.book_new();
                             XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-                            XLSX.writeFile(workbook, `${title}（时间：${Date()}）.xlsx`);
-                            XLSX.writeFile(workbook, `${title}（时间：${Date()}）（备份：发生意外状况时用这个文件还原）.xlsx`);
+                            XLSX.writeFile(workbook, `${title}.xlsx`);
+                            XLSX.writeFile(workbook, `${title}（备份：发生意外状况时用这个文件还原）.xlsx`);
                             this.loading = false;
                         }
                     } catch (error) {
@@ -91,7 +91,7 @@
 
                 // 加载[[Data:导出数据表格.json]]信息的功能
                 async function getText(name) {
-                    let a = await axios.get('https://xyy.huijiwiki.com/api/rest_v1/namespace/data?filter=%7B%22_id%22%3A%20%22Data%3A%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.json%22%7D?09');
+                    let a = await axios.get('https://xyy.huijiwiki.com/api/rest_v1/namespace/data?filter=%7B%22_id%22%3A%20%22Data%3A%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.json%22%7D');
                     a = a['data']['_embedded'][0];
                     options.value = a['list'];
 
