@@ -15,7 +15,7 @@
     </button>
     <n-config-provider :locale="zhCN" :theme="darkTheme" v-cloak>
         <n-modal v-model:show="showModal" class="custom-card" preset="card" :style="bodyStyle" :title="`编辑数据`"
-            size="huge" :bordered="false" :auto-focus="false" on-mask-click="cancel()">
+            size="huge" :bordered="false" :auto-focus="false">
             <n-ul>
                 <n-li>此处的所有“剧情简介”都应来自官方，官方写错的也一并保留。</n-li>
                 <n-li>可以留空，不必全部填写。</n-li>
