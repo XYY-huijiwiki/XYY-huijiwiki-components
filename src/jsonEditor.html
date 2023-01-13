@@ -21,6 +21,7 @@
                 <n-li>可以留空，不必全部填写。</n-li>
                 <n-li>记得保存，保存后要等待一段时间（最多24小时）页面才会刷新。</n-li>
             </n-ul>
+            <n-divider></n-divider>
             <n-form :model="data" label-placement="left" :label-width="80">
                 <n-form-item v-for="(value, key) in data" :label="key" :path="key">
                     <n-dynamic-tags v-if="Array.isArray(value)" v-model:value="data[key]"></n-dynamic-tags>
@@ -73,7 +74,7 @@
                 const data_backup = Vue.ref('');
                 const loading = Vue.ref(false);
                 const showModal = Vue.ref(true);
-                const title = Vue.ref(decodeURI(location.pathname.match(/wiki\/(.*?)$/)[1]));
+                const title = Vue.ref(mw.config.values.wgTitle);
 
                 // 打开新页面的功能
                 function openPage(pageName) {
