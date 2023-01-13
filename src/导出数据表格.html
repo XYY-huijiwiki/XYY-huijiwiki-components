@@ -41,7 +41,9 @@
             setTimeout(arguments.callee, 3000);
             console.log('正在等待CHP就绪');
         } else {
-            waitCHP();
+            CHP.then(function (tools) {
+                waitCHP();
+            });
             console.log('CHP已就绪');
         }
     })();
@@ -79,7 +81,7 @@
                             let workbook = XLSX.utils.book_new();
                             XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
                             XLSX.writeFile(workbook, `${title}.xlsx`);
-                            XLSX.writeFile(workbook, `${title}（备份：发生意外状况时用这个文件还原）.xlsx`);
+                            XLSX.writeFile(workbook, `${title}（时间：${Date()}）（备份：发生意外状况时用这个文件还原）.xlsx`);
                             this.loading = false;
                         }
                     } catch (error) {
