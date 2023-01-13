@@ -6,8 +6,10 @@
 用于将羊羊百科的剧集数据导出为表格。
 
 ### 对应关系
-- [导出数据表格.html](./src/导出数据表格.html)：[Html:导出数据表格](https://xyy.huijiwiki.com/wiki/Html:导出数据表格)
-- [导出数据表格.json](./src/导出数据表格.json)：[Data:导出数据表格.json](https://xyy.huijiwiki.com/wiki/Data:导出数据表格.json)（在羊羊百科，所有用户都可以修改这个页面，可能会出现两者不一致的情况）
+| Github页面 | 羊羊百科页面 | 备注 |
+| --- | --- | --- |
+| [导出数据表格.html](./src/导出数据表格.html) | [Html:导出数据表格](https://xyy.huijiwiki.com/wiki/Html:导出数据表格) |  |
+| [导出数据表格.json](./src/导出数据表格.json) | [Data:导出数据表格.json](https://xyy.huijiwiki.com/wiki/Data:导出数据表格.json) | 在羊羊百科，所有用户都可以修改这个页面，可能会出现两者不一致的情况 |
 
 ### 更新记录
 以下版本未使用Github管理，无法回退。新的版本更新直接记录在Github中。
