@@ -1,0 +1,145 @@
+<!-- {{=<% %>=}} -->
+<!-- <script src="https://www.unpkg.com/jquery/dist/jquery.min.js"></script> -->
+<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+<style>
+    [v-cloak] {
+        display: none;
+    }
+</style>
+<div id="jsonEditor">
+    <button class="mdui-btn mdui-btn-block mdui-btn-raised no-huiji mdui-color- mdui-btn-dense"
+        style="background:var(--brand-primary);color:var(--anti-text);" onclick="loadJsonEditor(this)"
+        @click="showModal = true">
+        <span class="material-symbols-outlined" style="font-size: 1.2em; vertical-align: sub;">edit</span>
+        &nbsp;编辑数据
+    </button>
+    <n-config-provider :locale="zhCN" :theme="darkTheme" v-cloak>
+        <n-modal v-model:show="showModal" class="custom-card" preset="card" :style="bodyStyle" :title="`编辑数据`"
+            size="huge" :bordered="false" :auto-focus="false">
+            <n-ul>
+                <n-li>此处的所有“剧情简介”都应来自官方，官方写错的也一并保留。</n-li>
+                <n-li>可以留空，不必全部填写。</n-li>
+                <n-li>记得保存，保存后要等待一段时间（最多24小时）页面才会刷新。</n-li>
+            </n-ul>
+            <n-form :model="data" label-placement="left" :label-width="80">
+                <n-form-item v-for="(value, key) in data" :label="key" :path="key">
+                    <n-dynamic-tags v-if="Array.isArray(value)" v-model:value="data[key]"></n-dynamic-tags>
+                    <n-input-number v-else-if="typeof value === 'number'" v-model:value="data[key]"
+                        style="width: 100%;"></n-input-number>
+                    <n-input v-else v-model:value="data[key]"></n-input>
+                </n-form-item>
+            </n-form>
+            <template #action>
+                <n-space justify="end">
+                    <n-button @click="openPage(`Data:${title}.json`)">源码编辑</n-button>
+                    <n-button @click="openPage(`Project:开发者#数据表格`)">批量编辑</n-button>
+                    <n-button @click="cancel()">取消（不保存）</n-button>
+                    <n-button @click="uploadData()" :loading="loading">保存</n-button>
+                </n-space>
+            </template>
+        </n-modal>
+    </n-config-provider>
+</div>
+<script>
+    async function loadJsonEditor() {
+
+        let org_html = $('#jsonEditor>button').html();
+        $('#jsonEditor>button').text('加载中……');
+
+        // await $.getScript('https://unpkg.com/vue/dist/vue.global.js');
+        await $.getScript('https://unpkg.com/vue/dist/vue.global.prod.js');
+        await $.getScript('https://unpkg.com/naive-ui/dist/index.prod.js');
+
+        await loadVue();
+
+        $('#jsonEditor>button').attr('onclick', "");
+        $('#jsonEditor>button').html(org_html);
+
+    };
+
+    // 初始化Vue
+    function loadVue() {
+
+        // 配置Vue程序
+        const App = {
+            setup() {
+
+                // 导入功能组件
+                const darkTheme = naive.darkTheme;
+                const zhCN = naive.zhCN;
+
+                // 定义变量
+                const data = Vue.ref({});
+                const data_backup = Vue.ref('');
+                const loading = Vue.ref(false);
+                const showModal = Vue.ref(true);
+                const title = Vue.ref(decodeURI(location.pathname.match(/wiki\/(.*?)$/)[1]));
+
+                // 打开新页面的功能
+                function openPage(pageName) {
+                    window.open(`https://xyy.huijiwiki.com/wiki/${pageName}`);
+                };
+
+                // 获取数据的功能
+                async function getData(title) {
+                    let requestURL = encodeURI(`https://xyy.huijiwiki.com/api/rest_v1/namespace/data/Data:${title}.json?${Date()}`);
+                    data.value = await axios.get(requestURL);
+                    data.value = data.value['data']['_embedded'][0];
+                    delete data.value['_id'];
+                    data_backup.value = JSON.parse(JSON.stringify(data.value));
+                };
+                getData(title.value);
+
+                // 取消按钮的功能
+                function cancel() {
+                    this.data = JSON.parse(JSON.stringify(data_backup.value));
+                    this.showModal = false;
+                };
+
+                // 保存按钮的功能
+                async function uploadData() {
+                    loading.value = true;
+
+                    await new mw.Api()
+                        .edit(`Data:${title.value}.json`, function () {
+                            return JSON.stringify(data.value);
+                        })
+                        .done(function () {
+                            $message.info('保存成功');
+                            loading.value = false;
+                        })
+                        .fail(function () {
+                            $message.info('保存失败');
+                            loading.value = false;
+                        });
+
+                    showModal.value = false;
+                };
+
+                // 手动暴露Vue参数
+                return {
+                    bodyStyle: {
+                        width: "720px",
+                    },
+                    showModal,
+                    loading,
+                    darkTheme,
+                    data,
+                    data_backup,
+                    openPage,
+                    title,
+                    zhCN,
+                    cancel,
+                    uploadData
+                };
+            }
+
+        };
+
+        // 启动Vue
+        const app = Vue.createApp(App);
+        app.use(naive);
+        app.mount('#jsonEditor');
+
+    }
+</script>

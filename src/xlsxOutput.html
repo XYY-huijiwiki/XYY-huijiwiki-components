@@ -1,0 +1,180 @@
+<!-- {{=<% %>=}} -->
+<script src="https://unpkg.com/vue/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/naive-ui/dist/index.prod.js"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/vue-i18n/dist/vue-i18n.global.prod.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<style>
+    [v-cloak] {
+        display: none;
+    }
+</style>
+<div id="xlsxOutput">
+    <n-config-provider :theme="darkTheme" v-cloak>
+        <n-button @click="showOutput = true" :disabled="textLoading" :loading="textLoading">{{ t(`btn_out`)
+            }}</n-button>
+        <n-modal v-model:show="showOutput" class="custom-card" preset="card" :style="bodyStyle" :title="t(`btn_out`)"
+            size="huge" :bordered="false" :auto-focus="false">
+            <n-p v-html="t('read_me')"></n-p>
+            <template #footer>
+                <n-popover trigger="click" style="padding-left: 0;">
+                    <template #trigger><n-a>{{t('a_update_log')}}</n-a></template>
+                    <n-ul><n-li v-for="a in update_log" v-html="a"></n-li></n-ul>
+                </n-popover>
+                &nbsp;|&nbsp;
+                <n-a href="./Data:导出数据表格.json" target="_blank">{{t('edit_conf')}}</n-a>
+            </template>
+            <template #action>
+                <n-input-group>
+                    <n-select v-model:value="value" :options="options" :placeholder="t(`placeholder`)"
+                        filterable></n-select>
+                    <n-button @click="getXlsx(value)" :loading="loading">{{ t(`btn_in`) }}</n-button>
+                </n-input-group>
+            </template>
+        </n-modal>
+    </n-config-provider>
+    <div style="height: 34px;" v-if="false">Loading...</div>
+</div>
+<script>
+
+    // 等待CHP准备就绪
+    (function () {
+        if (typeof CHP === 'undefined') {
+            setTimeout(arguments.callee, 3000);
+            console.log('正在等待CHP就绪');
+        } else {
+            waitCHP();
+            console.log('CHP已就绪');
+        }
+    })();
+
+    function waitCHP() {
+
+        // 配置Vue程序
+        const App = {
+            setup() {
+
+                // 导入功能组件
+                const { t, setLocaleMessage } = VueI18n.useI18n({ useScope: 'global' });
+                const darkTheme = naive.darkTheme;
+
+                // 加载表格的功能
+                async function getXlsx(title) {
+                    try {
+                        this.loading = true;
+                        if (title === null) {
+                            $message.error(t('blank'));
+                            this.loading = false;
+                        } else {
+                            let filter = encodeURI(`{"系列1":"${title}"}`);
+                            let response = await axios.get(`https://xyy.huijiwiki.com/api/rest_v1/namespace/data?filter=${filter}&sort_by=%E9%9B%86%E6%95%B0&pagesize=530&${Date()}`);
+                            await $cockpitUtil.sleep(500);
+                            await response[`data`][`_embedded`].forEach(element => {
+                                Object.keys(element).forEach(key => {
+                                    if (typeof element[key] === 'object') {
+                                        element[key] = JSON.stringify(element[key]);
+                                    };
+                                });
+                            });
+                            let worksheet = XLSX.utils.json_to_sheet(response[`data`][`_embedded`]);
+                            XLSX.utils.sheet_add_aoa(worksheet, [[""]], { origin: "A1" });
+                            let workbook = XLSX.utils.book_new();
+                            XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+                            XLSX.writeFile(workbook, `${title}（时间：${Date()}）.xlsx`);
+                            XLSX.writeFile(workbook, `${title}（时间：${Date()}）（备份：发生意外状况时用这个文件还原）.xlsx`);
+                            this.loading = false;
+                        }
+                    } catch (error) {
+                        $message.error(t('unknown'));
+                        console.error(error);
+                        this.loading = false;
+                    }
+                }
+
+                // 加载[[Data:导出数据表格.json]]信息的功能
+                async function getText(name) {
+                    let a = await axios.get('https://xyy.huijiwiki.com/api/rest_v1/namespace/data?filter=%7B%22_id%22%3A%20%22Data%3A%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC.json%22%7D?09');
+                    a = a['data']['_embedded'][0];
+                    options.value = a['list'];
+
+                    // 处理“read_me”
+                    let str_temp = '';
+                    Object.keys(a['messages']).forEach(element => {
+                        str_temp = str_temp + a['messages'][element]['read_me'] + '\n';
+                    });
+                    str_temp = await axios.post(
+                        `https://xyy.huijiwiki.com/api/rest_v1/transform/wikitext/to/html`,
+                        { wikitext: str_temp, body_only: true }
+                    );
+                    str_temp = str_temp['data'].slice(13, -5).split('\n');
+                    Object.keys(a['messages']).forEach((element, index) => {
+                        a['messages'][element]['read_me'] = str_temp[index];
+                    });
+                    Object.keys(a['messages']).forEach(element => {
+                        setLocaleMessage(element, a['messages'][element]);
+                    });
+
+                    // 处理“更新记录”内容
+                    a['update_log'].forEach(element => {
+                        update_log.value = `${update_log.value}${element}\n`;
+                    });
+                    update_log.value = await axios.post(
+                        `https://xyy.huijiwiki.com/api/rest_v1/transform/wikitext/to/html`,
+                        { wikitext: update_log.value, body_only: true }
+                    );
+                    update_log.value = update_log.value['data'].slice(13, -5).split('\n');
+
+                    // 结束加载状态
+                    textLoading.value = false;
+                };
+
+                // Vue加载完成后自动获取[[Data:导出数据表格.json]]信息
+                Vue.onMounted(() => {
+                    getText();
+                });
+
+                // 定义一些变量
+                let options = Vue.ref(null);
+                let data = Vue.ref(null);
+                let msg = Vue.ref(null);
+                let textLoading = Vue.ref(true);
+                let update_log = Vue.ref('');
+
+                // 手动暴露Vue参数
+                return {
+                    bodyStyle: {
+                        width: "720px"
+                    },
+                    value: Vue.ref(null),
+                    showOutput: Vue.ref(false),
+                    loading: Vue.ref(false),
+                    options,
+                    getXlsx,
+                    getText,
+                    darkTheme,
+                    data,
+                    msg,
+                    t,
+                    textLoading,
+                    setLocaleMessage,
+                    update_log
+                };
+            }
+
+        };
+
+        // 配置国际化插件
+        const i18n = VueI18n.createI18n({
+            legacy: false,
+            fallbackLocale: 'zh',
+            locale: navigator.language
+        });
+
+        // 启动Vue
+        const app = Vue.createApp(App);
+        app.use(naive);
+        app.use(i18n);
+        app.mount('#xlsxOutput');
+
+    };
+</script>
