@@ -157,7 +157,7 @@
         const i18n = VueI18n.createI18n({
             legacy: false,
             fallbackLocale: 'zh',
-            locale: navigator.language
+            locale: OO.ui.getUserLanguages()[0]
         });
 
         // 启动Vue
