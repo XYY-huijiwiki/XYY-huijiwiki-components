@@ -5,30 +5,33 @@
             "btn_out": "导出数据表格",
             "btn_in": "导出",
             "a_github": "Github",
+            "a_conf_page": "配置文件",
+            "a_html_page": "代码页面",
             "placeholder": "请选择",
             "blank": "请选择需要导出的内容。",
-            "unknown": "未知错误",
-            "edit_conf": "修改配置文件"
+            "unknown": "未知错误"
         },
         "en": {
             "read_me": "Here you can select a series and export its data as xlsx file, so you edit it on your computer. You need [[www:帮助:灰机Wiki数据更新器|Huiji-Updater]] to upload the edited xlsx file to XYY wiki.",
             "btn_out": "Export Xlsx File",
             "btn_in": "Export",
             "a_github": "Github",
+            "a_conf_page": "Configuration Page",
+            "a_html_page": "HTML Page",
             "placeholder": "Please select",
             "blank": "Please select the series to be exported.",
-            "unknown": "Unknown Error",
-            "edit_conf": "Edit Configuration"
+            "unknown": "Unknown Error"
         },
         "de": {
             "read_me": "Hier können Sie eine Serie auswählen und ihre Daten als xlsx-Datei exportieren, so dass Sie sie auf Ihrem Computer bearbeiten. Sie benötigen [[www:帮助:灰机Wiki数据更新器|Huiji-Updater]], um die bearbeitete xlsx-Datei in das XYY-Wiki hochzuladen.",
             "btn_out": "Xlsx-Datei Exportieren",
             "btn_in": "Exportieren",
             "a_github": "Github",
+            "a_conf_page": "Konfigurationsseite",
+            "a_html_page": "HTML-Seite",
             "placeholder": "Bitte auswählen",
             "blank": "Bitte wählen Sie die zu exportierende Serie aus.",
-            "unknown": "Unbekannter Fehler",
-            "edit_conf": "Konfiguration Bearbeiten"
+            "unknown": "Unbekannter Fehler"
         }
     },
     "list": [

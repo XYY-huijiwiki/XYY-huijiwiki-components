@@ -1,9 +1,9 @@
 <!-- {{=<% %>=}} -->
-<script src="https://unpkg.com/vue/dist/vue.global.prod.js"></script>
-<script src="https://unpkg.com/naive-ui/dist/index.prod.js"></script>
-<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<script src="https://unpkg.com/vue-i18n/dist/vue-i18n.global.prod.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/naive-ui/dist/index.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-i18n/dist/vue-i18n.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
     [v-cloak] {
         display: none;
@@ -20,7 +20,9 @@
                 <n-a href="https://github.com/XiaoSong-CPE/XYY-huiji-wiki-components"
                     target="_blank">{{t('a_github')}}</n-a>
                 &nbsp;|&nbsp;
-                <n-a href="./Data:导出数据表格.json" target="_blank">{{t('edit_conf')}}</n-a>
+                <n-a href="./Data:导出数据表格.json" target="_blank">{{t('a_conf_page')}}</n-a>
+                &nbsp;|&nbsp;
+                <n-a href="./Html:导出数据表格" target="_blank">{{t('a_html_page')}}</n-a>
             </template>
             <template #action>
                 <n-input-group>
@@ -40,11 +42,14 @@
         if (typeof CHP === 'undefined') {
             setTimeout(arguments.callee, 3000);
             console.log('正在等待CHP就绪');
+        } else if (typeof mw === 'undefined') {
+            setTimeout(arguments.callee, 3000);
+            console.log('正在等待Wiki api就绪');
         } else {
             CHP.then(function (tools) {
                 waitCHP();
             });
-            console.log('CHP已就绪');
+            console.log('CHP和Wiki api已就绪');
         }
     })();
 
@@ -157,7 +162,7 @@
         const i18n = VueI18n.createI18n({
             legacy: false,
             fallbackLocale: 'zh',
-            locale: navigator.language
+            locale: mw.config.values.wgUserLanguage
         });
 
         // 启动Vue
