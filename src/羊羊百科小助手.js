@@ -9,9 +9,9 @@ jQuery(document).ready(function ($) {
     //初始化
     (async () => {
         console.log('[羊羊百科小助手]正在加载Vue……');
-        await $.getScript('https://unpkg.com/vue/dist/vue.global.js');
+        await $.getScript('https://cdn.jsdelivr.net/npm/vue/dist/vue.global.js');
         console.log('[羊羊百科小助手]正在加载Naive UI……');
-        await $.getScript('https://unpkg.com/naive-ui/dist/index.prod.js');
+        await $.getScript('https://cdn.jsdelivr.net/npm/naive-ui/dist/index.prod.js');
         console.log('[羊羊百科小助手]正在启动程序……');
         await initVue();
         console.log('[羊羊百科小助手]启动完成。');
@@ -74,23 +74,23 @@ jQuery(document).ready(function ($) {
                 //功能2：获取淘宝商品信息
                 async function getTaobaoItem(pagename, price, date, feat, ifImgDownload) {
 
-                    console.log(ifImgDownload);
                     pagename = pagename || '页面名称';
                     price = price || $('#J_StrPrice>.tb-rmb-num').text();
-                    feat = feat || '';
                     let link = `https://item.taobao.com/item.htm?id=${g_config.itemId}`;
                     let img = g_config.idata.item.auctionImages;
 
                     //加载品牌信息
-                    let brand = '';
-                    switch (g_config.shopName) {
-                        case '漫游仓':
-                            brand = "漫游仓";
-                            break;
-                        case '喜羊羊与灰太狼CPE':
-                            brand = "原创动力";
-                            break;
-                    }
+                    let brand = (JSON.parse(GM_getResourceText('json')))['Taobao2Brand'][g_config.shopName] || '';
+
+                    //加载主题信息
+                    let series = (JSON.parse(GM_getResourceText('json')))['series'];
+                    let defaultFeat = '';
+                    series.forEach(element => {
+                        if (g_config['idata']['item']['title'].includes(element)) {
+                            defaultFeat = element;
+                        }
+                    });
+                    feat = feat || defaultFeat;
 
                     //收集颜色分类的图片
                     $('#J_isku .J_TSaleProp a').each((index, ele) => {
