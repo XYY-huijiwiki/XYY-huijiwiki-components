@@ -8,6 +8,7 @@
 // @require      https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
 // @match      https://www.youtube.com/playlist*
 // @match      https://item.taobao.com/item.htm*
+// @match      https://detail.tmall.com/item.htm*
 // @grant GM_download
 // @grant GM_getResourceText
 // @grant GM_addStyle

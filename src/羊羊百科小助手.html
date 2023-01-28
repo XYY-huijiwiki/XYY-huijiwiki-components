@@ -29,23 +29,56 @@
                     <n-p>使用下列功能时请务必先手动滑动至页面底部，确保描述图完全加载完毕。</n-p>
                     <n-form label-placement="left" :label-width="80">
                         <n-form-item label="页面名称">
-                            <n-input v-model:value="taobaoItem.pagename" />
+                            <n-input v-model:value="productItem.pagename" />
                         </n-form-item>
                         <n-form-item label="周边价格">
-                            <n-input v-model:value="taobaoItem.price" />
+                            <n-input v-model:value="productItem.price" />
                         </n-form-item>
                         <n-form-item label="上架日期">
-                            <n-input v-model:value="taobaoItem.date" />
+                            <n-input v-model:value="productItem.date" />
                         </n-form-item>
                         <n-form-item label="周边主题">
-                            <n-input v-model:value="taobaoItem.feat" />
+                            <n-input v-model:value="productItem.feat" />
                         </n-form-item>
                         <n-form-item label="下载图片">
-                            <n-switch v-model:value="taobaoItem.ifImgDownload" />
+                            <n-switch v-model:value="productItem.ifImgDownload" />
                         </n-form-item>
                         <n-form-item>
                             <n-button attr-type="button"
-                                @click="getTaobaoItem(taobaoItem.pagename, taobaoItem.price, taobaoItem.date, taobaoItem.feat, taobaoItem.ifImgDownload)">
+                                @click="getTaobaoItem(productItem.pagename, productItem.price, productItem.date, productItem.feat, productItem.ifImgDownload)">
+                                获取
+                            </n-button>
+                        </n-form-item>
+                    </n-form>
+                    <n-code :code="resCode" />
+                </div>
+
+                <!-- 网站为天猫商品详情时显示的内容 -->
+                <div v-if="currentSite===`天猫`">
+                    <n-alert :show-icon="false">
+                        检测到当前网站为天猫商品详情。检测出错时请勿使用任何功能。
+                    </n-alert>
+                    <n-h2>获取商品数据</n-h2>
+                    <n-p>使用下列功能时请务必先手动滑动至页面底部，确保描述图完全加载完毕。</n-p>
+                    <n-form label-placement="left" :label-width="80">
+                        <n-form-item label="页面名称">
+                            <n-input v-model:value="productItem.pagename" />
+                        </n-form-item>
+                        <n-form-item label="周边价格">
+                            <n-input v-model:value="productItem.price" />
+                        </n-form-item>
+                        <n-form-item label="上架日期">
+                            <n-input v-model:value="productItem.date" />
+                        </n-form-item>
+                        <n-form-item label="周边主题">
+                            <n-input v-model:value="productItem.feat" />
+                        </n-form-item>
+                        <n-form-item label="下载图片">
+                            <n-switch v-model:value="productItem.ifImgDownload" />
+                        </n-form-item>
+                        <n-form-item>
+                            <n-button attr-type="button"
+                                @click="getTianmaoItem(productItem.pagename, productItem.price, productItem.date, productItem.feat, productItem.ifImgDownload)">
                                 获取
                             </n-button>
                         </n-form-item>

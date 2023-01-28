@@ -12,6 +12,10 @@ jQuery(document).ready(function ($) {
         await $.getScript('https://cdn.jsdelivr.net/npm/vue/dist/vue.global.js');
         console.log('[羊羊百科小助手]正在加载Naive UI……');
         await $.getScript('https://cdn.jsdelivr.net/npm/naive-ui/dist/index.prod.js');
+        // console.log('[羊羊百科小助手]正在加载spark-md5……');
+        // await $.getScript('https://cdn.jsdelivr.net/npm/spark-md5/spark-md5.min.js');
+        // console.log('[羊羊百科小助手]正在加载axios……');
+        // await $.getScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js');
         console.log('[羊羊百科小助手]正在启动程序……');
         await initVue();
         console.log('[羊羊百科小助手]启动完成。');
@@ -29,7 +33,7 @@ jQuery(document).ready(function ($) {
                 const zhCN = naive.zhCN;
                 osThemeRef = naive.useOsTheme();
                 const resCode = Vue.ref('');
-                const taobaoItem = Vue.ref({
+                const productItem = Vue.ref({
                     pagename: '',
                     price: '',
                     date: '',
@@ -41,6 +45,7 @@ jQuery(document).ready(function ($) {
                 let currentSite = "";
                 if (location.href.match(/www.youtube.com\/playlist*/)) { currentSite = "优兔"; }
                 if (location.href.match(/item.taobao.com\/item.htm*/)) { currentSite = "淘宝"; }
+                if (location.href.match(/detail.tmall.com\/item.htm*/)) { currentSite = "天猫"; }
 
                 //功能1：获取优兔播放列表
                 function getYouTubeList(type) {
@@ -146,14 +151,79 @@ jQuery(document).ready(function ($) {
 
                 }
 
+                //功能3：获取天猫商品信息
+                async function getTianmaoItem(pagename, price, date, feat, ifImgDownload) {
+
+                    pagename = pagename || '页面名称';
+                    price = price || $('[class^=Price--originPrice] [class^=Price--priceText--2nLbVda]').text();
+
+                    //加载主题信息
+                    let series = (JSON.parse(GM_getResourceText('json')))['series'];
+                    let defaultFeat = '';
+                    series.forEach(element => {
+                        if (($('[class^=ItemHeader--mainTitle]').text()).includes(element)) {
+                            defaultFeat = element;
+                        }
+                    });
+                    feat = feat || defaultFeat;
+
+                    //加载品牌信息
+                    let brand = (JSON.parse(GM_getResourceText('json')))['Tianmao2Brand'][($('[class^=ShopFloat--title]').text())] || '';
+
+                    //加载链接信息
+                    let link = 'https://detail.tmall.com/item.htm?id=' + $('#aliww-click-trigger').attr('data-item');
+
+                    //加载描述图
+                    let longImgList = [];
+                    $('.descV8-richtext p img').each((index, ele) => {
+                        longImgList = longImgList.concat($(ele).attr('src'));
+                        console.log(longImgList);
+                    });
+                    //生成文件名
+                    let longImgNameList = [];
+                    longImgList.forEach((element, index) => {
+                        longImgNameList[index] = pagename + " 描述图" + (index + 1) + element.slice(-4);
+                        if (ifImgDownload) { GM_download(element, longImgNameList[index]); }
+                    });
+                    let longImgNameStr = longImgNameList.join('|');
+
+                    //加载主图
+                    let imgList = [];
+                    $('[class^=PicGallery--thumbnailPic]').each((index, ele) => {
+                        imgList = imgList.concat($(ele).attr('src'));
+                    });
+                    $('.skuIcon').each((index, ele) => {
+                        imgList = imgList.concat($(ele).attr('src'));
+                    });
+                    //加上https前缀，去除图片压缩后缀，去除重复图片
+                    imgList.forEach((element, index) => {
+                        imgList[index] = 'https:' + element.replace('_110x10000Q75.jpg_.webp', '').replace('_60x60q50.jpg_.webp', '');
+                        // let blob = axios.get(imgList[index]);
+                        // console.log(SparkMD5.hash(blob.data));
+                    });
+                    imgList = Array.from(new Set(imgList));
+                    //生成文件名
+                    let imgNameList = [];
+                    imgList.forEach((element, index) => {
+                        imgNameList[index] = pagename + (index + 1) + element.slice(-4);
+                        if (ifImgDownload) { GM_download(element, imgNameList[index]); }
+                    });
+                    let imgNameStr = imgNameList.join('\n');
+
+                    //等待长图加载完毕后输出结果
+                    resCode.value = `{{周边信息\n|版权=\n|尺寸=\n|定价=${price}\n|货号=\n|链接（京东）=\n|链接（乐乎市集）=\n|链接（奇货）=\n|链接（淘宝）=\n|链接（天猫）=${link}\n|链接（玩具反斗城）=\n|品牌=${brand}\n|日期=${date}\n|适龄=\n|条码=\n|主题=${feat}\n}}\n\n<gallery>\n${imgNameStr}\n</gallery>\n\n{{长图|${longImgNameStr}}}\n`;
+
+                }
+
                 // 手动暴露Vue参数
                 return {
                     showDrawer: Vue.ref(false),
                     resCode,
                     currentSite,
-                    taobaoItem,
+                    productItem,
                     getYouTubeList,
                     getTaobaoItem,
+                    getTianmaoItem,
                     darkTheme,
                     zhCN,
                     theme: Vue.computed(() => (osThemeRef.value === 'dark' ? darkTheme : null)),
