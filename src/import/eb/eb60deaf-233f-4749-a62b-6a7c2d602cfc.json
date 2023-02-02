@@ -1,0 +1,1 @@
+{"__type__":"cc.AnimationClip","_name":"shopToolsMove","_duration":1,"curveData":{"props":{"y":[{"frame":0,"value":-325},{"frame":1,"value":216}],"scale":[{"frame":0,"value":{"__type__":"cc.Vec2","x":0.2,"y":0.2}},{"frame":1,"value":{"__type__":"cc.Vec2","x":2,"y":2}}],"opacity":[{"frame":0,"value":100},{"frame":1,"value":255}]}}}

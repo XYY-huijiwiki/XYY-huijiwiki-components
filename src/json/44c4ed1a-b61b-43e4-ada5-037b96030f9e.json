@@ -1,0 +1,1 @@
+{"__type__":"cc.AnimationClip","_name":"toolsCdAnim","_duration":8.016666666666667,"curveData":{"paths":{"yuan":{"comps":{"cc.Sprite":{"fillRange":[{"frame":0.016666666666666666,"value":1},{"frame":8.016666666666667,"value":0}]}},"props":{"opacity":[{"frame":0,"value":0},{"frame":0.016666666666666666,"value":180},{"frame":8,"value":180},{"frame":8.016666666666667,"value":0}]}}}}}
