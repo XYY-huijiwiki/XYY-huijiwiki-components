@@ -119,6 +119,7 @@
                         .edit(`Data:${title.value}.json`, function () {
                             return {
                                 text: JSON.stringify(data.value),
+                                summary: editSummary,
                                 tags: 'jsoneditor'
                             };
                         })
