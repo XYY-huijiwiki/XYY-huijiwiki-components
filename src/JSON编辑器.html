@@ -119,16 +119,15 @@
                         .edit(`Data:${title.value}.json`, function () {
                             return {
                                 text: JSON.stringify(data.value),
-                                summary: editSummary,
                                 tags: 'jsoneditor'
                             };
                         })
                         .done(function () {
-                            $message.info('保存成功');
+                            $message.success('保存成功');
                             loading.value = false;
                         })
                         .fail(function () {
-                            $message.info('保存失败');
+                            $message.error('保存失败');
                             loading.value = false;
                         });
 
