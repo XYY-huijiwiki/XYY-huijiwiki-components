@@ -102,9 +102,14 @@
                     loading.value = true;
 
                     await new mw.Api()
-                        .edit(`Data:${title.value}.json`, function () {
-                            return JSON.stringify(data.value);
-                        })
+                        .edit(
+                            `Data:${title.value}.json`,
+                            function () {
+                                return {
+                                    text: JSON.stringify(data.value),
+                                    summary: '通过JSON编辑器编辑',
+                                };
+                            })
                         .done(function () {
                             $message.info('保存成功');
                             loading.value = false;
