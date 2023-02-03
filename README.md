@@ -1,4 +1,4 @@
-# XYY-huiji-wiki-components
+# XYY-huijiwiki-components
 用Vue为羊羊百科编写的功能组件。
 
 
