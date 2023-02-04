@@ -20,6 +20,7 @@
                 <n-li>此处的所有“剧情简介”都应来自官方，官方写错的也一并保留。</n-li>
                 <n-li>可以留空，不必全部填写。</n-li>
                 <n-li>记得保存，保存后要等待一段时间（最多24小时）页面才会刷新。</n-li>
+                <n-li>大部分数据已经过校对，如确信要修改请在编辑摘要内简要说明理据。</n-li>
             </n-ul>
             <n-divider></n-divider>
             <n-form :model="data" label-placement="left" :label-width="80">
@@ -29,13 +30,16 @@
                         style="width: 100%;"></n-input-number>
                     <n-input v-else v-model:value="data[key]"></n-input>
                 </n-form-item>
+                <n-form-item label="编辑摘要" :path="editSummary">
+                    <n-input v-model:value="editSummary"></n-input>
+                </n-form-item>                
             </n-form>
             <template #action>
                 <n-space justify="end">
                     <n-button @click="openPage(`Data:${title}.json`)">源码编辑</n-button>
                     <n-button @click="openPage(`Project:开发者#数据表格`)">批量编辑</n-button>
                     <n-button @click="cancel()">取消（不保存）</n-button>
-                    <n-button @click="uploadData()" :loading="loading">保存</n-button>
+                    <n-button @click="checkEditSummary()" :loading="loading">保存</n-button>
                 </n-space>
             </template>
         </n-modal>
@@ -75,6 +79,7 @@
                 const loading = Vue.ref(false);
                 const showModal = Vue.ref(true);
                 const title = Vue.ref(mw.config.values.wgTitle);
+                const editSummary = Vue.ref('');
 
                 // 打开新页面的功能
                 function openPage(pageName) {
@@ -97,20 +102,32 @@
                     this.showModal = false;
                 };
 
+                // 强制要求填写编辑摘要
+                async function checkEditSummary() {
+                    if (!editSummary.length) {
+                        alert('编辑摘要不得为空！');
+                        return;
+                    }
+                    await uploadData();
+                };
+
                 // 保存按钮的功能
                 async function uploadData() {
                     loading.value = true;
 
                     await new mw.Api()
                         .edit(`Data:${title.value}.json`, function () {
-                            return JSON.stringify(data.value);
+                            return {
+                                text: JSON.stringify(data.value),
+                                tags: 'jsoneditor'
+                            };
                         })
                         .done(function () {
-                            $message.info('保存成功');
+                            $message.success('保存成功');
                             loading.value = false;
                         })
                         .fail(function () {
-                            $message.info('保存失败');
+                            $message.error('保存失败');
                             loading.value = false;
                         });
 
