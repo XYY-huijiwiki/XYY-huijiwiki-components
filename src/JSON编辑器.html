@@ -104,7 +104,7 @@
 
                 // 强制要求填写编辑摘要
                 async function checkEditSummary() {
-                    if (!editSummary.length) {
+                    if (!editSummary.value.length) {
                         alert('编辑摘要不得为空！');
                         return;
                     }
@@ -119,6 +119,7 @@
                         .edit(`Data:${title.value}.json`, function () {
                             return {
                                 text: JSON.stringify(data.value),
+                                summary: editSummary,
                                 tags: 'jsoneditor'
                             };
                         })
@@ -149,7 +150,8 @@
                     zhCN,
                     cancel,
                     uploadData,
-                    checkEditSummary
+                    checkEditSummary,
+                    editSummary
                 };
             }
 
