@@ -1,0 +1,1 @@
+{"__type__":"cc.AnimationClip","_name":"endAnim","_duration":0.8333333333333334,"curveData":{"props":{"scale":[{"frame":0,"value":{"__type__":"cc.Vec2","x":1,"y":1}},{"frame":0.6666666666666666,"value":{"__type__":"cc.Vec2","x":3,"y":3}}],"opacity":[{"frame":0,"value":255},{"frame":0.8333333333333334,"value":0}]}}}
