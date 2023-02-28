@@ -7,7 +7,7 @@ var MainMenuScene = cc.Scene.extend({
     onEnter : function () {
         this._super();
         this.loadBackgroundLayer(); 
-        this.loadUILayer();         
+        this.loadUILayer();     
     },
     loadBackgroundLayer : function(){
         this.backgroundLayer = new MMBackgroundLayer();

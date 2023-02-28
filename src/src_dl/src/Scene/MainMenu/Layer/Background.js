@@ -6,6 +6,11 @@ var MMBackgroundLayer = cc.Layer.extend({
     loadBackgound : function(){
         var node = new cc.Sprite(res.mm_bg);
         this.addChild(node);
-        node.setPosition(winSize.width / 2, winSize.height / 2);
+        node.attr({
+            anchorX:0,
+            anchorY:1,
+            x:0,
+            y:winSize.height
+        });
     }
 });
