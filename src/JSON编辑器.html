@@ -113,27 +113,21 @@
 
                 // 保存按钮的功能
                 async function uploadData() {
-                    loading.value = true;
-
-                    await new mw.Api()
-                        .edit(`Data:${title.value}.json`, function () {
-                            return {
-                                text: JSON.stringify(data.value),
-                                summary: editSummary.value,
-                                tags: 'jsoneditor'
-                            };
-                        })
-                        .done(function () {
-                            $message.success('保存成功');
-                            loading.value = false;
-                        })
-                        .fail(function () {
-                            $message.error('保存失败');
-                            loading.value = false;
-                        });
-
-                    showModal.value = false;
-                };
+                    try {
+                        loading.value = true;
+                        await new mw.Api().edit(`Data:${title.value}.json`, () => ({
+                            text: JSON.stringify(data.value),
+                            summary: editSummary.value,
+                            tags: 'jsoneditor'
+                        }));
+                        $message.success('保存成功');
+                    } catch (error) {
+                        $message.error('保存失败');
+                    } finally {
+                        loading.value = false;
+                        showModal.value = false;
+                    }
+                }
 
                 // 手动暴露Vue参数
                 return {
